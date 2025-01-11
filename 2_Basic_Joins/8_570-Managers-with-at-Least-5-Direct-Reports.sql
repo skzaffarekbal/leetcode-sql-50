@@ -52,6 +52,7 @@
  +------+
  
  */
+-- Using With Clause
 WITH allManagerId AS (
     SELECT COUNT(id) AS employees,
         managerId
@@ -62,3 +63,18 @@ WITH allManagerId AS (
 SELECT e.name
 FROM Employee e
     JOIN allManagerId m ON e.id = m.managerId;
+
+-- Using Subquery
+SELECT name
+FROM Employee
+WHERE id IN (
+    SELECT managerId
+    FROM Employee
+    GROUP BY managerId
+    HAVING COUNT(id) >= 5
+);
+
+-- Using Group By and Join
+SELECT e.name FROM Employee e
+JOIN (SELECT COUNT(id) AS employees, managerId FROM Employee GROUP BY managerId HAVING COUNT(id) >= 5) m 
+ON e.id = m.managerId;
